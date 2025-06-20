@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Diario de Amor de Giovanni para Sami</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    background: linear-gradient(135deg, #ffe9f0 0%, #f2f9ff 100%);
+    font-family: 'Indie Flower', cursive, 'Segoe UI', sans-serif;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: #4a0e2a;
+  }
+  .diario {
+    width: 90%;
+    max-width: 900px;
+    height: 80vh;
+    position: relative;
+    display: flex;
+    perspective: 1500px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    background: #fff7fa;
+    border-radius: 15px;
+  }
+  .pagina {
+    width: 50%;
+    height: 100%;
+    background: #fff0f6;
+    box-shadow: inset 0 0 12px rgba(255, 182, 193, 0.4);
+    border: 2px solid #fce4ec;
+    border-radius: 0 15px 15px 0;
+    padding: 40px 30px 50px 30px;
+    position: absolute;
+    top: 0;
+    overflow-y: auto;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+  .izq {
+    left: 0;
+    border-radius: 15px 0 0 15px;
+    transform-origin: right;
+  }
+  .der {
+    right: 0;
+    border-radius: 0 15px 15px 0;
+    transform-origin: left;
+  }
+  .titulo {
+    font-size: 2rem;
+    color: #c2185b;
+    margin-bottom: 20px;
+    border-bottom: 2px dashed #f8bbd0;
+    padding-bottom: 10px;
+  }
+  .texto {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    white-space: pre-line;
+  }
+  .decoracion {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: url('https://i.imgur.com/lrZhWtP.png') no-repeat center/contain;
+    top: 15px;
+    left: calc(50% - 40px);
+    opacity: 0.15;
+    pointer-events: none;
+  }
+  .botones {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 40px;
+  }
+  button {
+    background: #f48fb1;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    color: white;
+    cursor: pointer;
+    font-weight: 700;
+    transition: background 0.3s;
+  }
+  button:hover {
+    background: #ec407a;
+  }
+  /* Scrollbar para páginas */
+  .pagina::-webkit-scrollbar {
+    width: 8px;
+  }
+  .pagina::-webkit-scrollbar-track {
+    background: #ffe9f0;
+  }
+  .pagina::-webkit-scrollbar-thumb {
+    background: #f48fb1;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+<div class="diario">
+  <div class="pagina izq" id="pagIzq">
+    <div class="decoracion"></div>
+    <div class="titulo" id="tiIzq"></div>
+    <div class="texto" id="txIzq"></div>
+  </div>
+  <div class="pagina der" id="pagDer">
+    <div class="decoracion"></div>
+    <div class="titulo" id="tiDer"></div>
+    <div class="texto" id="txDer"></div>
+  </div>
+  <div class="botones">
+    <button onclick="prev()">⟵ Atrás</button>
+    <button onclick="next()">Siguiente ⟶</button>
+  </div>
+</div>
+
+<script>
+  const contenido = [
+    [
+      { t: "Con todo mi amor, de Giovanni para mi preciosa mujer", x: "Un pequeño diario lleno de amor, recuerdos y promesas, que viaja en cada palabra hasta ti, aunque la distancia nos separe." },
+      { t: "", x: "" }
+    ],
+    [
+      { t: "1. Tu mirada que llega al corazón", x: "Cuando me miras aunque sea por video, siento que me ves más allá de la pantalla. Es como si mis pensamientos fueran tan tuyos como los tuyos son míos." },
+      { t: "2. Tus mensajitos", x: "Cada palabra tuya ilumina mis días. Ese 'buenos días' lleno de cariño, aunque estés lejos, me acerca a ti más que cualquier abrazo." }
+    ],
+    [
+      { t: "3. Tus abrazos imaginarios", x: "Cierro los ojos y siento que me abrazas, que me rodeas con tus brazos. Aunque no estés cerca físicamente, tu amor me reconforta y me hace sentir en casa." },
+      { t: "4. Cómo me haces reír", x: "Tienes la chispa perfecta para alegrar mis días. Incluso en una videollamada, tu risa logra que el mundo se vea más brillante." }
+    ],
+    [
+      { t: "5. Tu voz al teléfono", x: "Escucharte me calma. Tu tono, tu forma de reírte, esa manera dulce de pronunciar mi nombre, todo me llena de paz y me hace olvidarme del silencio de la distancia." },
+      { t: "6. Lo detallista que eres", x: "Siempre te acuerdas de las pequeñas cosas: mi comida favorita, mi canción del día… esos detalles a kilómetros de distancia me hacen sentir cuidado." }
+    ],
+    [
+      { t: "7. Tu ternura", x: "Eres un remanso de dulzura. Ya sea cuando me envías una foto o un mensaje, tu ternura se filtra en mi corazón y me derrite por completo." },
+      { t: "8. Cómo cuidas de mí", x: "Aunque no puedas estar físicamente a mi lado, tu dedicación, tus consejos y esa preocupación constante me hacen sentir acompañado y querido." }
+    ],
+    [
+      { t: "9. Tus ocurrencias", x: "Cada ocurrencia tuya, cada locura que compartes conmigo, me recuerda lo especial y única que eres. Me haces querer atravesar cualquier kilómetro solo para estar a tu lado." },
+      { t: "10. Tu forma de amar", x: "Amar a distancia no es fácil, pero tú lo haces con una entrega total. Me enseñas que el amor verdadero no conoce barreras ni horarios." }
+    ],
+    [
+      { t: "11. Eres mi refugio", x: "En mis días más difíciles, tus palabras son mi consuelo. Aunque estemos lejos, tu apoyo me fortalece y me recuerda que juntos podemos con todo." },
+      { t: "12. Tu fuerza interior", x: "Admiro cómo enfrentas cada desafío. Esa fortaleza tuya, aunque no la vea cada día, me impulsa a creer en nosotros." }
+    ],
+    [
+      { t: "13. Tu risa sincera", x: "Esa risa contagiosa tuya es música para mi vida. Aunque no esté ahí para escucharla en persona, se siente tan real." },
+      { t: "14. Tu belleza auténtica", x: "No hablo solo de lo físico, sino de esa belleza que radia de tu alma; esa luz que brilla incluso al otro lado del mundo." }
+    ],
+    [
+      { t: "15. Tu apoyo incondicional", x: "Cada mensaje de “estoy contigo” me llega al corazón. Esa certeza de tu compañía, aunque sea virtual, me llena de paz." },
+      { t: "16. Me haces sentir en casa", x: "Cuando hablamos, es como si estuviéramos en el mismo lugar. Contigo todo se siente familiar, incluso desde la distancia." }
+    ],
+    [
+      { t: "17. Nunca me abandonas", x: "Aunque no puedo abrazarte, sé que estás ahí. Eso me da fuerzas para enfrentar la soledad de lo lejos." },
+      { t: "18. Confías en mí", x: "Esa confianza tuya me inspira a dar lo mejor de mí. Saber que crees en nosotros me hace fuerte." }
+    ],
+    [
+      { t: "19. Tus celos sutiles", x: "Incluso cuando sientes un pellizco de celos, lo entiendo: es porque te importo, y eso me hace sentir querido." },
+      { t: "20. Nuestra historia", x: "Cada mensaje, cada llamada, cada lágrima y cada sonrisa compartida han tejido una historia que vale oro. A pesar de todo, seguimos juntos." }
+    ],
+    [
+      { t: "21. Cómo me haces sentir vivo", x: "Cuando escucho tu voz o veo tu rostro aunque sea en una pantalla, mi corazón late más fuerte. Siento la emoción de amarte intensamente, más allá de lo físico." },
+      { t: "22. Tu piel imaginada", x: "Imagino tu piel rozando la mía, tu perfume envolviéndome, y esa fantasía me enciende el alma. Cada noche pienso en ti y mi deseo crece." }
+    ],
+    [
+      { t: "23. Nuestro deseo compartido", x: "Aunque estemos lejos, compartimos ansias, suspiros, caricias imaginarias que me hacen soñar con el día en que estarás en mis brazos." },
+      { t: "24. Tu pasión", x: "Hay una pasión en ti que trasciende kilómetros. Se siente en cada palabra tuya, en cada mirada de video. Esa llama me consume de la mejor manera." }
+    ],
+    [
+      { t: "25. Porque te deseo", x: "Te deseo con cada fibra de mi ser. Deseo tus labios, tu piel, tu abrazo. Deseo que esa distancia se convierta en un suspiro hasta tenerte cerca." },
+      { t: "Fin. Te amo", x: "Gracias por cada segundo, cada pensamiento, cada latido. Este diario viaja contigo, con todo mi amor y mi deseo profundo. — Giovanni 💌" }
+    ]
+  ];
+
+  let paginaActual = 0;
+
+  const tiIzq = document.getElementById('tiIzq');
+  const txIzq = document.getElementById('txIzq');
+  const tiDer = document.getElementById('tiDer');
+  const txDer = document.getElementById('txDer');
+  const pagIzq = document.getElementById('pagIzq');
+  const pagDer = document.getElementById('pagDer');
+
+  function mostrarPagina() {
+    const [izq, der] = contenido[paginaActual];
+    tiIzq.textContent = izq.t;
+    txIzq.textContent = izq.x;
+    tiDer.textContent = der.t;
+    txDer.textContent = der.x;
+
+    // Animación suave al cambiar
+    pagIzq.style.transform = "rotateY(0deg)";
+    pagDer.style.transform = "rotateY(0deg)";
+  }
+
+  function next() {
+    if (paginaActual < contenido.length - 1) {
+      pagDer.style.transform = "rotateY(-170deg)";
+      setTimeout(() => {
+        paginaActual++;
+        mostrarPagina();
+        pagDer.style.transform = "rotateY(0deg)";
+      }, 300);
+    }
+  }
+
+  function prev() {
+    if (paginaActual > 0) {
+      pagIzq.style.transform = "rotateY(170deg)";
+      setTimeout(() => {
+        paginaActual--;
+        mostrarPagina();
+        pagIzq.style.transform = "rotateY(0deg)";
+      }, 300);
+    }
+  }
+
+  mostrarPagina();
+</script>
+</body>
+</html>
